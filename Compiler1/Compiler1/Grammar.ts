@@ -1,9 +1,8 @@
 export class Grammar {
-
+    terminals: [string , RegExp][] = [];
     constructor(input: string) {
         
         let id: Set<string> = new Set();
-        let rex: Set<string> = new Set();
         var grams = input.split("\n");
         for (var i = 0; i < grams.length - 1; i++) {
             
@@ -22,12 +21,11 @@ export class Grammar {
                 throw new Error("Empty ID");
             }
             if (id.has(g[1])) {
-                throw new Error("ID already created.");
+                throw new Error("Regex already created.");
             }
             else if (g[1] == "") {
-                throw new Error("Empty ID");
+                throw new Error("Empty Regex");
             }
-         
             try {
                 new RegExp(g[1]);
             }
@@ -36,8 +34,9 @@ export class Grammar {
             }
             
             id.add(g[0]);
+            
+            this.terminals[i] = [g[0], RegExp(g[1])];
         }
-
         
 
     }

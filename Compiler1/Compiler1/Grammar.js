@@ -2,8 +2,8 @@
 exports.__esModule = true;
 var Grammar = /** @class */ (function () {
     function Grammar(input) {
+        this.terminals = [];
         var id = new Set();
-        var rex = new Set();
         var grams = input.split("\n");
         for (var i = 0; i < grams.length - 1; i++) {
             if (grams[i].length == 0) {
@@ -20,10 +20,10 @@ var Grammar = /** @class */ (function () {
                 throw new Error("Empty ID");
             }
             if (id.has(g[1])) {
-                throw new Error("ID already created.");
+                throw new Error("Regex already created.");
             }
             else if (g[1] == "") {
-                throw new Error("Empty ID");
+                throw new Error("Empty Regex");
             }
             try {
                 new RegExp(g[1]);
@@ -32,6 +32,7 @@ var Grammar = /** @class */ (function () {
                 throw new Error("Invalid Regex");
             }
             id.add(g[0]);
+            this.terminals[i] = [g[0], RegExp(g[1])];
         }
     }
     return Grammar;
