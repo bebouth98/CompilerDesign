@@ -1,24 +1,26 @@
 import { Token } from "./Token";
 import { TreeNode } from "./TreeNode";
+import { makeAsm } from "./asm";
 declare var require: any;
 let antlr4 = require('./antlr4')
 let Lexer = require('./gramLexer.js').gramLexer;
 let Parser = require('./gramParser.js').gramParser
 export function parse(txt: string) {
     
-
+    
     let stream = new antlr4.InputStream(txt);
     let lexer = new Lexer(stream);
     let tokens = new antlr4.CommonTokenStream(lexer);
     let parser = new Parser(tokens);
     let handler = new ErrorHandler();
+    parser.buildParseTrees = true;
     lexer.removeErrorListeners();
     lexer.addErrorListener(handler);
     parser.removeErrorListeners()
     parser.addErrorListener(handler);
-    let antlrroot = parser.start();
+    let antlrroot = parser.program();
     let root: TreeNode = walk(parser, antlrroot);
-    parser.buildParseTrees = true;
+    return makeAsm(root);
     //this assumes your start symbol is 'start'
     
 }

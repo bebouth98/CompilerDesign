@@ -2,6 +2,7 @@
 exports.__esModule = true;
 var Token_1 = require("./Token");
 var TreeNode_1 = require("./TreeNode");
+var asm_1 = require("./asm");
 var antlr4 = require('./antlr4');
 var Lexer = require('./gramLexer.js').gramLexer;
 var Parser = require('./gramParser.js').gramParser;
@@ -11,13 +12,14 @@ function parse(txt) {
     var tokens = new antlr4.CommonTokenStream(lexer);
     var parser = new Parser(tokens);
     var handler = new ErrorHandler();
+    parser.buildParseTrees = true;
     lexer.removeErrorListeners();
     lexer.addErrorListener(handler);
     parser.removeErrorListeners();
     parser.addErrorListener(handler);
-    var antlrroot = parser.start();
+    var antlrroot = parser.program();
     var root = walk(parser, antlrroot);
-    parser.buildParseTrees = true;
+    return asm_1.makeAsm(root);
     //this assumes your start symbol is 'start'
 }
 exports.parse = parse;

@@ -38,7 +38,7 @@ var Tokenizer = /** @class */ (function () {
             var terminal = this.grammar.terminals[i];
             var sym = terminal[0];
             var rex = new RegExp(terminal[1], "y"); //RegExp
-            rex.lastIndex = this.idx; //tell where to start searching
+            rex.lastIndex = this.idx; //tell where to start searching 
             var m = rex.exec(this.inputData); //do the search
             if (m) {
                 //m[0] contains matched text as string
