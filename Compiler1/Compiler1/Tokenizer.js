@@ -32,7 +32,7 @@ var Tokenizer = /** @class */ (function () {
     Tokenizer.prototype.next = function () {
         if (this.idx >= this.inputData.length) {
             //special "end of file" metatoken
-            return new Token_1.Token("$", undefined, this.currentLine);
+            return new Token_1.Token("$", this.currentLine, undefined);
         }
         for (var i = 0; i < this.grammar.terminals.length; ++i) {
             var terminal = this.grammar.terminals[i];
@@ -48,7 +48,7 @@ var Tokenizer = /** @class */ (function () {
                 this.currentLine += lexeme.split('\n').length - 1;
                 if (sym !== "WHITESPACE" && sym !== "COMMENT") {
                     //return new Token using sym, lexeme, and line number
-                    return new Token_1.Token(sym, lexeme, tmpline);
+                    return new Token_1.Token(sym, tmpline, lexeme);
                 }
                 else {
                     //skip whitespace and get next real token

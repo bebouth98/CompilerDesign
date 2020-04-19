@@ -35,7 +35,7 @@ export class Tokenizer {
     next():Token {
         if (this.idx >= this.inputData.length) {
             //special "end of file" metatoken
-            return new Token("$", undefined, this.currentLine);
+            return new Token("$", this.currentLine, undefined );
         }
 
         for (let i = 0; i < this.grammar.terminals.length; ++i) {
@@ -52,7 +52,7 @@ export class Tokenizer {
                 this.currentLine += lexeme.split('\n').length - 1;
                 if (sym !== "WHITESPACE" && sym !== "COMMENT") {
                     //return new Token using sym, lexeme, and line number
-                    return new Token(sym, lexeme, tmpline);
+                    return new Token(sym, tmpline ,lexeme);
                 } else {
                     //skip whitespace and get next real token
                     return this.next();
