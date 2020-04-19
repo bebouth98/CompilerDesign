@@ -42,7 +42,7 @@ export class Tokenizer {
             let terminal = this.grammar.terminals[i];
             let sym = terminal[0];
             let rex =new RegExp(terminal[1],"y");     //RegExp
-            rex.lastIndex = this.idx;   //tell where to start searching
+            rex.lastIndex = this.idx;   //tell where to start searching 
             let m = rex.exec(this.inputData);   //do the search
             if (m) {
                 //m[0] contains matched text as string
