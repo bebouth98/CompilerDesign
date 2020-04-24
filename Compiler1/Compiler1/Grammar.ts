@@ -2,12 +2,29 @@ import { NodeType } from "./NodeType";
 export class Grammar {
     terminals: [string, RegExp][] = [];
     nonterminals: [string, string][] = [];
+    nullable: Set<string> = new Set();
+    
     constructor(input: string) {
         
         let ID: Set<string> = new Set();
-        let grams = input.split("\n\n");
-        let terms = grams[0].split("\n");
-        let nonterms = grams[1].split("\n");
+        let grams = input.split("\n");
+        let terms:string [] = [];
+        let nonterms: string[] = [];
+        let isterm: boolean = true;
+        grams.forEach(e => {
+            if (e.length != 0) {
+                if (isterm) {
+                    terms.push(e);
+                }
+                else {
+                    nonterms.push(e);
+                }
+            }
+            else {
+                isterm = false;
+            }
+        });
+
         for (let i = 0; i < terms.length; i++) {
             
             if (terms[i].length == 0) {
@@ -42,7 +59,7 @@ export class Grammar {
             
             this.terminals[i] = [g[0], RegExp(g[1])];
         }
-        for (var i = 0; i < nonterms.length - 1; i++) {
+        for (var i = 0; i < nonterms.length; i++) {
             if (nonterms[i].length == 0) {
                 continue;
             }
@@ -59,7 +76,6 @@ export class Grammar {
                 throw new Error("Empty nonterminal");
             }
             
-
             const found: number = this.nonterminals.findIndex(e => e[0] === g[0])
             if (found !== -1) {
                 var nonterm = this.nonterminals[found];
@@ -78,8 +94,7 @@ export class Grammar {
         let first: NodeType = new NodeType("expr");
 
         this.dfs(first, used);
-        console.log(ID);
-        console.log(used);
+        
         if (ID !== undefined) {
             ID.forEach(def => {
                 if (!used.has(def)) {
@@ -91,7 +106,7 @@ export class Grammar {
         if (used !== undefined) {
             used.forEach(u => {
                 if (u !== '' && !ID.has(u)) {
-                    throw new Error(u + ":Not defined")
+                    //throw new Error(u + ":Not defined")
                 }
             });
         }
@@ -102,6 +117,34 @@ export class Grammar {
 
         let foo: Set<string> = new Set();
 
+    }
+    getNullable() {
+        let stabe: boolean = true;
+
+        console.log(this.nonterminals);
+        while (true) {
+            stabe = true;
+            this.nonterminals.forEach(e => {
+
+                if (!this.nullable.has(e[0])) {
+                    let products = e[1].split("|");
+                    console.log(products);
+                    products.forEach(p => {
+                        
+                        let symbols = p.trim().split(" ");
+                        if (symbols.every(symb => this.nullable.has(symb) || symb == "lambda") ){
+                            this.nullable.add(e[0]);
+                            stabe = false;
+                        }
+                        
+                    })
+                }
+            })
+            if (stabe) {
+                break;
+            }
+        }
+        return this.nullable;
     }
     dfs(N: NodeType, v: Set<string>) {
         v.add(N.label);
@@ -127,4 +170,5 @@ export class Grammar {
             })
         }
     }
+    
 }

@@ -5,10 +5,25 @@ var Grammar = /** @class */ (function () {
     function Grammar(input) {
         this.terminals = [];
         this.nonterminals = [];
+        this.nullable = new Set();
         var ID = new Set();
-        var grams = input.split("\n\n");
-        var terms = grams[0].split("\n");
-        var nonterms = grams[1].split("\n");
+        var grams = input.split("\n");
+        var terms = [];
+        var nonterms = [];
+        var isterm = true;
+        grams.forEach(function (e) {
+            if (e.length != 0) {
+                if (isterm) {
+                    terms.push(e);
+                }
+                else {
+                    nonterms.push(e);
+                }
+            }
+            else {
+                isterm = false;
+            }
+        });
         for (var i_1 = 0; i_1 < terms.length; i_1++) {
             if (terms[i_1].length == 0) {
                 continue;
@@ -40,7 +55,7 @@ var Grammar = /** @class */ (function () {
             }
             this.terminals[i_1] = [g[0], RegExp(g[1])];
         }
-        for (var i = 0; i < nonterms.length - 1; i++) {
+        for (var i = 0; i < nonterms.length; i++) {
             if (nonterms[i].length == 0) {
                 continue;
             }
@@ -69,8 +84,6 @@ var Grammar = /** @class */ (function () {
         var used = new Set();
         var first = new NodeType_1.NodeType("expr");
         this.dfs(first, used);
-        console.log(ID);
-        console.log(used);
         if (ID !== undefined) {
             ID.forEach(function (def) {
                 if (!used.has(def)) {
@@ -81,12 +94,37 @@ var Grammar = /** @class */ (function () {
         if (used !== undefined) {
             used.forEach(function (u) {
                 if (u !== '' && !ID.has(u)) {
-                    throw new Error(u + ":Not defined");
+                    //throw new Error(u + ":Not defined")
                 }
             });
         }
         var foo = new Set();
     }
+    Grammar.prototype.getNullable = function () {
+        var _this = this;
+        var stabe = true;
+        console.log(this.nonterminals);
+        while (true) {
+            stabe = true;
+            this.nonterminals.forEach(function (e) {
+                if (!_this.nullable.has(e[0])) {
+                    var products = e[1].split("|");
+                    console.log(products);
+                    products.forEach(function (p) {
+                        var symbols = p.trim().split(" ");
+                        if (symbols.every(function (symb) { return _this.nullable.has(symb) || symb == "lambda"; })) {
+                            _this.nullable.add(e[0]);
+                            stabe = false;
+                        }
+                    });
+                }
+            });
+            if (stabe) {
+                break;
+            }
+        }
+        return this.nullable;
+    };
     Grammar.prototype.dfs = function (N, v) {
         var _this = this;
         v.add(N.label);
