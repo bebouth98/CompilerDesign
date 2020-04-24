@@ -5,6 +5,8 @@ export class Tokenizer {
     inputData: string;
     currentLine: number = 1;
     idx: number = 0;    //index of next unparsed char in inputData
+    prevList: Token[] = [];
+    current: Token;
 
     constructor(grammar: Grammar) {
         this.grammar = grammar;
@@ -12,7 +14,7 @@ export class Tokenizer {
         var addC = true;
         for (let i = 0; i < this.grammar.terminals.length; ++i) {
             if (this.grammar.terminals[i][0] == "WHITESPACE") {
-                addW = false;
+                addW =false;
             }
             if (this.grammar.terminals[i][0] == "COMMENT") {
                 addC = false;
@@ -29,9 +31,20 @@ export class Tokenizer {
         this.inputData = inputData;
         this.currentLine = 1;
         this.idx = 0;
-        console.log(inputData);
     }
-    
+    peek() {
+        let tmpidx = this.idx;
+        let tmpcur = this.current;
+        let tmpL = this.prevList;
+        let tmpline = this.currentLine;
+        let next = this.next();
+        this.idx = tmpidx;
+        this.current = tmpcur;
+        this.prevList = tmpL;
+        this.currentLine = tmpline;
+        return next;
+
+    }
     next():Token {
         if (this.idx >= this.inputData.length) {
             //special "end of file" metatoken
@@ -52,7 +65,12 @@ export class Tokenizer {
                 this.currentLine += lexeme.split('\n').length - 1;
                 if (sym !== "WHITESPACE" && sym !== "COMMENT") {
                     //return new Token using sym, lexeme, and line number
-                    return new Token(sym, lexeme, tmpline);
+                    this.current = new Token(sym, lexeme, tmpline);
+                    this.prevList.push(this.current);
+                    if (this.prevList.length > 2) {
+                        this.prevList.shift();
+                    }
+                    return this.current;
                 } else {
                     //skip whitespace and get next real token
                     return this.next();
@@ -61,6 +79,12 @@ export class Tokenizer {
         }
         //no match; syntax error
         throw new Error("No Match");
+    }
+    previous():Token {
+        if (this.prevList.length < 2) {
+            return undefined;
+        }
+        return this.prevList[this.prevList.length-2];
     }
     
 

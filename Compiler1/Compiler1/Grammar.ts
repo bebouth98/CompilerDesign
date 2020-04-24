@@ -83,7 +83,7 @@ export class Grammar {
         if (ID !== undefined) {
             ID.forEach(def => {
                 if (!used.has(def)) {
-                    throw new Error(def + "Not used within grammar.")
+                    //throw new Error(def + "Not used within grammar.")
                 }
             });
         } 

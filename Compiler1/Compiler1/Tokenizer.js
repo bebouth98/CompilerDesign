@@ -5,6 +5,7 @@ var Tokenizer = /** @class */ (function () {
     function Tokenizer(grammar) {
         this.currentLine = 1;
         this.idx = 0; //index of next unparsed char in inputData
+        this.prevList = [];
         this.grammar = grammar;
         var addW = true;
         var addC = true;
@@ -27,7 +28,18 @@ var Tokenizer = /** @class */ (function () {
         this.inputData = inputData;
         this.currentLine = 1;
         this.idx = 0;
-        console.log(inputData);
+    };
+    Tokenizer.prototype.peek = function () {
+        var tmpidx = this.idx;
+        var tmpcur = this.current;
+        var tmpL = this.prevList;
+        var tmpline = this.currentLine;
+        var next = this.next();
+        this.idx = tmpidx;
+        this.current = tmpcur;
+        this.prevList = tmpL;
+        this.currentLine = tmpline;
+        return next;
     };
     Tokenizer.prototype.next = function () {
         if (this.idx >= this.inputData.length) {
@@ -48,7 +60,12 @@ var Tokenizer = /** @class */ (function () {
                 this.currentLine += lexeme.split('\n').length - 1;
                 if (sym !== "WHITESPACE" && sym !== "COMMENT") {
                     //return new Token using sym, lexeme, and line number
-                    return new Token_1.Token(sym, lexeme, tmpline);
+                    this.current = new Token_1.Token(sym, lexeme, tmpline);
+                    this.prevList.push(this.current);
+                    if (this.prevList.length > 2) {
+                        this.prevList.shift();
+                    }
+                    return this.current;
                 }
                 else {
                     //skip whitespace and get next real token
@@ -58,6 +75,12 @@ var Tokenizer = /** @class */ (function () {
         }
         //no match; syntax error
         throw new Error("No Match");
+    };
+    Tokenizer.prototype.previous = function () {
+        if (this.prevList.length < 2) {
+            return undefined;
+        }
+        return this.prevList[this.prevList.length - 2];
     };
     return Tokenizer;
 }());

@@ -74,7 +74,7 @@ var Grammar = /** @class */ (function () {
         if (ID !== undefined) {
             ID.forEach(function (def) {
                 if (!used.has(def)) {
-                    throw new Error(def + "Not used within grammar.");
+                    //throw new Error(def + "Not used within grammar.")
                 }
             });
         }
