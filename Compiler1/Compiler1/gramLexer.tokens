@@ -40,7 +40,6 @@ ID=31
 '='=18
 '-'=21
 ','=22
-'(int|string|double)'=23
 'print'=25
 'input'=26
 'open'=27
