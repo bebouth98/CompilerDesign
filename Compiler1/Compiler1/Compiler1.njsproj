@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="app.ts" />
+    <Content Include="gram.txt" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="tests.txt" />

@@ -22,7 +22,7 @@ PLUS : [+];
 MULOP : [*/%];
 MINUS : '-';
 CMA : ',';
-TYPE : '(int|string|double)';
+TYPE : 'int'|'string'|'double';
 STRINGCONST : '"' ( '\\"' | ~["] )* '"' ;
 PRINT : 'print';
 INPUT : 'input';

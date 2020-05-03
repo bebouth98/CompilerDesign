@@ -171,8 +171,8 @@ var sharedContextCache = new antlr4.PredictionContextCache();
 var literalNames = [ null, null, null, "';'", "'while'", null, null, "'if'", 
                      "'else'", "'return'", null, null, null, null, "'or'", 
                      "'and'", "'not'", null, "'='", null, null, "'-'", "','", 
-                     "'(int|string|double)'", null, "'print'", "'input'", 
-                     "'open'", "'read'", "'write'", "'close'" ];
+                     null, null, "'print'", "'input'", "'open'", "'read'", 
+                     "'write'", "'close'" ];
 
 var symbolicNames = [ null, "WHITESPACE", "COMMENT", "SEMI", "WHILE", "LP", 
                       "RP", "IF", "ELSE", "RETURN", "LBR", "RBR", "FPNUM", 
