@@ -18,6 +18,7 @@ function parse(txt) {
     var antlrroot = parser.start();
     var root = walk(parser, antlrroot);
     parser.buildParseTrees = true;
+    return root.toString();
     //this assumes your start symbol is 'start'
 }
 exports.parse = parse;

@@ -57,5 +57,5 @@ funcCall : builtinFuncCall | userFuncCall;
 userFuncCall : ID LP optionalExprlist RP;
 optionalExprlist :  | exprlist;
 exprlist : exprlist CMA expr | expr;
-builtinFuncCall : PRINT LP expr RP | INPUT LP RP | OPEN LP expr RP | WRITE LP expr CMA expr RP | CLOSE LP expr RP;
+builtinFuncCall : PRINT LP expr RP | INPUT LP RP | OPEN LP expr RP | WRITE LP exprlist RP | CLOSE LP expr RP;
 
